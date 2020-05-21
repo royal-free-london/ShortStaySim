@@ -1,0 +1,60 @@
+---
+title: 'AAU Capacity analysis: Part 2'
+subtitle: 'Changes in AAU Admissions and Length of Stay'
+author: "Edward Watkinson (edward.watkinson@nhs.net)"
+date: "24 April 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, fig.align='center')
+source("00_ShortStay_Import-Data_EW.R")
+source("06_ShortStay_post-check-in-Analysis_EW.R")
+
+# •	Currently 39% of admissions from ED go to AAU, which is up from 30% in April-June 2018 -  but has stabilised for the last few months.
+# •	Median Length of stay in AAU for both patients discharged home and to other wards has increased.
+# •	The distributions have moved to the right, and have spread – particular for patients discharged home.
+# •	Despite this overall Length of stay in the hospital has fallen
+
+```
+Following from previous work on AAU capacity requirements, this analysis focuses on the current operation of AAU - how many admissions from ED have come through AAU, and how long patients are staying in AAU.
+
+##Admissions to AAU
+The graph below shows the split between AAU admissions and others via ED for adult patients. We can see an increase in the proporiton of patients admitted to AAU over the last year (from around 30% in April-June 2018 to 39%), but the figures now remain stable and are not significantly increasing (as can be seen from the trend lines).
+
+```{r gAdmPcntWrdGrp}
+gAdmPcntWrdGrp
+```
+
+## Length of Stay
+
+Median Length of stay in AAU for both patients discharged home and to other wards has increased. Additionally there was significantly longer than average length of stay around the chirstmas period. 
+
+```{r gLoSMedAAU}
+gLoSMedAAU
+```
+
+The animation below shows the changing distribution of length of stay in AAU (weekly) split by where the patient was discharged to (home or another ward). The vertical lines denote the median quarterly length of stay for each type of patient. It shows the same phenomenon as the previous chart but also shows how both distributions have become 'flatter' with greater variation in length of stay.
+
+```{r gLoSDistWklyAnim}
+gLoSDistWklyAnim
+```
+
+##The Rest of the hospital and patients staying over 24 hours
+
+Overall Length of stay for patients staying 1 or more days at the Royal Free has fallen from 7.4 days to 6.9 after a shift in November 2018 -  although this appears to be due to a reduction in the number of patients staying 7 days or more rather than changes to the number or length of stay of short-stayers.
+![From Royal Free UEC Performance Dashboard](mLoS1PlusRFH.PNG)
+![From Royal Free UEC Performance Dashboard](mAdm7PlusRFH.PNG)
+
+If some patients are not going into AAU from ED, where are they going? the picture below shows the flow of patients admitted from ED to AAU, MAU and other wards over the last quarter. The percentages on the lines show the proportion of patient who flow from each ward/area, for example on average 35% of patients admitted via ED go to AAU. THe figure in each ward/are shows the overall volume of activity occuring in each area. We also include a 'move' within a ward where the patient changes specialty (hence 20% of patients flowing within AAU) We can see a signifncant proportion of patients flowing to 'other' wards in the tower.
+```{r}
+pmWrdGroupRel
+```
+
+The graph below shows the frequency of admission from ED by each individual ward.
+```{r gAdmPcntWrd, fig.height=10}
+gAdmPcntWrd
+```
+
+
+

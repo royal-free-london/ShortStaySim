@@ -1,0 +1,95 @@
+---
+title: "AAU Capacity analysis"
+author: "Edward Watkinson, Performance & Analytics. (edward.watkinson@nhs.net)"
+date: "13th March 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = FALSE)
+
+##Import working files
+source("00_ShortStay_Import-Data_EW.R")
+source("01_ShortStay_Exp-Analysis_EW.R")
+source("02_ShortStay_Model_EW.R")
+
+```
+
+# AAU Capacity
+
+This short piece of analysis and modelling attempts to show the underlying patterns of demand which impact on the AAU at the Royal Free Hospital: 
+- What is 'demand' for the unit?
+- what the required size would be to cope with that demand as currently configured?
+
+Pathways for patients staying for short periods have huge (and potentially unexpected) impacts on the rest of the hospital's capacity. An excellent summary of these issues is available from the Nuffield Trust here:
+
+www.nuffieldtrust.org.uk/files/2017-01/understanding-patient-flow-in-hospitals-web-final.pdf
+
+
+# Assessing demand - Looking at averages
+
+A standard way of looking at this problen would be to look at the total number of 'bed days' patients are using. From April 2018:
+
+- A: How many people require AAU (per day)? : **`r round(meanDailyMajadms, 1)`** patients (all admissions to hospital from ED Majors)
+- B: How long do people currently stay in AAU (per day) ? **`r round(meanTotalAAULoS/24, 2)`** days (**`r round(meanTotalAAULoS, 2)`** hours) (current AAU average length of stay)                                                            | 
+
+Beds required = A x B =  **__`r round(meanDailyMajadms * meanTotalAAULoS/24,1)`__**
+
+## ...but *variation* has a huge impact on capacity requirements
+Variation both in patient needs and in our processes both have a big impact on avialable capacity at any one time. In this case:
+
+- variation in how many patients need a bed and when
+- variation in how long patients stay in that bed
+
+*Both* of these often have warranted and un-warranted aspects, due to patients condition, the speed at which capacity and services are available to them and the team looking after them.
+<P style="page-break-before: always">
+## The time people need a bed varies throughout the day...
+
+This chart shows arrival times in A&E for patients who are subsequently admitted through majors.
+
+```{r arrivals1, echo = FALSE, fig.align='center'}
+#show chart of major admissions by hour
+gEDMajors_adms_days
+
+```
+
+<P style="page-break-before: always">
+
+## ...but this is also different on different days
+
+Comparing the average (in green and as the previous chart) with the extremities you can see that there is a huge spread. 
+
+```{r arrivals2, echo = FALSE, fig.align='center'}
+#show chart of arrival by hour in boxplot
+gEDMajors_adms_hours_bp
+```
+
+<P style="page-break-before: always">
+## Patients LoS in AAU also varies significantly
+
+There is a long tail - i.e. a small but significant number of patients stay for a lot longer than 4 days.
+
+```{r LoS, echo = FALSE, fig.align='center'}
+gLOS_hist
+```
+
+<P style="page-break-before: always">
+
+## Beds required
+
+Using this information, we can better estimate actual bed requirements. And **how often** we will run out of capacity depending on how many beds we have.
+
+If we assume that patients will arrive according to these previous *patterns* (by hour and day) and that some will stay longer than others.
+
+We can simulate what would have happened if we had no constraint on AAU capcity under this scenario.
+
+
+
+The figure below shows the output of the simulation. The 85% line shows that for this number of beds you are likely to **not** have space for patients 15% of the time. (Assuming the bed is ready for the next patient within the hour.)
+
+
+```{r modelOut1, echo = FALSE, fig.align='center'}
+gPIW_modelOutput_PDF
+```
+
+
